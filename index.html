@@ -799,7 +799,7 @@ modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.remove('o
 
 document.querySelectorAll('.qa button').forEach(b=>b.addEventListener('click',()=>b.parentElement.classList.toggle('open')));
 
-let step=1; const TOTAL=5; const answers={type:null,area:null,level:null,when:null};
+let step=1; const TOTAL=5; const answers={type:null,area:null,level:null,when:null}; let calcOut=null;
 function render(){
   document.querySelectorAll('.qstep').forEach(s=>s.classList.toggle('active',+s.dataset.step===step));
   document.getElementById('qbar').style.width=(step/TOTAL*100)+'%';
@@ -826,6 +826,7 @@ function calc(){
   // вывоз мусора — отдельно: вторичка (полный демонтаж) дороже, новостройка дешевле
   const musor=Math.round(a*(t>1.05?800:400)/1000)*1000;
   document.getElementById('qMusor').textContent='+ вывоз мусора ≈ '+f(musor)+' ₽ (отдельно, по объёму)';
+  calcOut={low:low,high:high,musor:musor};
   trackGoal('quiz_price_shown');
 }
 render();
@@ -836,7 +837,7 @@ function submitLead(src){
   else{name=document.getElementById('mName').value;phone=document.getElementById('mPhone').value;consent=document.getElementById('mConsent');}
   if(!phone||phone.replace(/\D/g,'').length<6){alert('Пожалуйста, укажите телефон для связи');return;}
   if(consent&&!consent.checked){alert('Пожалуйста, подтвердите согласие на обработку персональных данных');return;}
-  const payload={name,phone,source:src,quiz:answers,utm:UTM,page:location.href,ts:new Date().toISOString()};
+  const payload={name,phone,source:src,quiz:answers,calc:calcOut,utm:UTM,page:location.href,ts:new Date().toISOString()};
   if(LEAD_ENDPOINT){fetch(LEAD_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).catch(()=>{});}
   console.log('LEAD →',payload);
   trackGoal('lead');
