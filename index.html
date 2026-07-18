@@ -137,8 +137,8 @@ header{position:sticky;top:0;z-index:60;background:rgba(16,19,23,.85);backdrop-f
 @media(max-width:560px){.qopts{grid-template-columns:1fr}.quiz-body{padding:24px}}
 
 /* packages */
-.pkgs{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:42px}
-.pkg{border:1px solid rgba(255,255,255,.09);border-radius:20px;background:var(--bg-2);padding:34px 28px;display:flex;flex-direction:column;position:relative}
+.pkgs{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:42px}
+.pkg{border:1px solid rgba(255,255,255,.09);border-radius:20px;background:var(--bg-2);padding:30px 22px;display:flex;flex-direction:column;position:relative}
 .pkg.pop{border-color:var(--gold);box-shadow:0 30px 60px -30px rgba(200,164,92,.35)}
 .pkg.pop::before{content:"Выбирают чаще";position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--gold);color:#20180a;font-size:.74rem;font-weight:800;letter-spacing:.04em;padding:6px 15px;border-radius:99px;text-transform:uppercase}
 .pkg h3{font-family:'Manrope',sans-serif;font-size:1.3rem;font-weight:800;color:#fff}
@@ -149,7 +149,8 @@ header{position:sticky;top:0;z-index:60;background:rgba(16,19,23,.85);backdrop-f
 .pkg li{display:flex;gap:11px;font-size:.95rem;color:var(--cream-dim)}
 .pkg li svg{flex:none;color:var(--gold);margin-top:3px}
 .pkg .btn{margin-top:auto}
-@media(max-width:840px){.pkgs{grid-template-columns:1fr;max-width:460px;margin-inline:auto}.pkg.pop{order:-1}}
+@media(max-width:1040px){.pkgs{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.pkgs{grid-template-columns:1fr;max-width:460px;margin-inline:auto}.pkg.pop{order:-1}}
 
 /* scope */
 .scope-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px 34px;margin-top:40px}
@@ -378,7 +379,7 @@ html.js .rv.in{opacity:1;transform:none}
     <div class="hero-media">
       <img src="assets/room-bedroom.webp" alt="Квартира после ремонта под ключ — декоративная отделка стен" loading="eager">
       <div class="hero-badge">
-        <div class="big">≈ 19 500 ₽/м²</div>
+        <div class="big">≈ 10 900 ₽/м²</div>
         <small>ориентир по работам «под ключ», точная смета — после замера</small>
       </div>
     </div>
@@ -410,7 +411,7 @@ html.js .rv.in{opacity:1;transform:none}
       <div class="bcard"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3 3 7l9 4 9-4-9-4Z" stroke="#c8a45c" stroke-width="1.7" stroke-linejoin="round"/><path d="M3 7v6l9 4 9-4V7" stroke="#c8a45c" stroke-width="1.7" stroke-linejoin="round"/></svg></div><h3>Гарантия 3 года</h3><p>Письменная гарантия на все работы, включая скрытые — разводку, гидроизоляцию, электрику.</p></div>
       <div class="bcard"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 20v-2a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2" stroke="#c8a45c" stroke-width="1.7"/><circle cx="12" cy="8" r="4" stroke="#c8a45c" stroke-width="1.7"/></svg></div><h3>Свои мастера</h3><p>Работают проверенные специалисты, а не случайные бригады с площадок объявлений.</p></div>
       <div class="bcard"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="#c8a45c" stroke-width="1.7"/><path d="m8 12 2 2 4-4" stroke="#c8a45c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Онлайн-отчёты</h3><p>Фото и видео с объекта — видите ход ремонта, даже если не приезжаете каждый день.</p></div>
-      <div class="bcard"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 11 12 3l9 8M5 10v10h14V10" stroke="#c8a45c" stroke-width="1.7" stroke-linejoin="round"/></svg></div><h3>Заезжайте в готовое</h3><p>Сдаём чистую квартиру: уборка и вывоз мусора в подарок. Заходите и живите, без «доделаем потом».</p></div>
+      <div class="bcard"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 11 12 3l9 8M5 10v10h14V10" stroke="#c8a45c" stroke-width="1.7" stroke-linejoin="round"/></svg></div><h3>Заезжайте в готовое</h3><p>Сдаём квартиру, готовую к жизни — заходите и живите, без «доделаем потом».</p></div>
     </div>
   </div>
 </section>
@@ -420,7 +421,7 @@ html.js .rv.in{opacity:1;transform:none}
   <div class="wrap center">
     <span class="eyebrow">Калькулятор стоимости</span>
     <h2 class="sec-title" style="color:#1a1e23">Узнайте стоимость ремонта за 1 минуту</h2>
-    <p class="sec-sub">4 вопроса — и вы увидите ориентировочную вилку по работам. Точную смету бесплатно рассчитает специалист на замере.</p>
+    <p class="sec-sub">5 вопросов — и вы увидите ориентировочную вилку по работам. Точную смету бесплатно рассчитает специалист на замере.</p>
     <div class="quiz">
       <div class="quiz-head">
         <b>Расчёт стоимости ремонта</b>
@@ -447,9 +448,10 @@ html.js .rv.in{opacity:1;transform:none}
           <div class="qstep" data-step="3">
             <label class="q">3. Уровень ремонта</label>
             <div class="qopts" data-key="level">
-              <div class="qopt" data-v="15000"><span class="rd"></span><span>Черновой<small>с разводкой, под чистовую</small></span></div>
-              <div class="qopt" data-v="19500"><span class="rd"></span><span>Под ключ<small>полный, заезжай и живи</small></span></div>
-              <div class="qopt" data-v="28000"><span class="rd"></span><span>Премиум<small>дизайн, керамогранит</small></span></div>
+              <div class="qopt" data-v="6900"><span class="rd"></span><span>Косметический<small>освежить: обои, покраска</small></span></div>
+              <div class="qopt" data-v="8900"><span class="rd"></span><span>Черновой<small>с разводкой, под чистовую</small></span></div>
+              <div class="qopt" data-v="10900"><span class="rd"></span><span>Капитальный<small>полный, заезжай и живи</small></span></div>
+              <div class="qopt" data-v="24900"><span class="rd"></span><span>Дизайнерский<small>дизайн, керамогранит</small></span></div>
             </div>
           </div>
           <div class="qstep" data-step="4">
@@ -462,11 +464,18 @@ html.js .rv.in{opacity:1;transform:none}
             </div>
           </div>
           <div class="qstep" data-step="5">
+            <label class="q">5. Где квартира?</label>
+            <div class="qopts" data-key="geo">
+              <div class="qopt" data-v="1"><span class="rd"></span><span>Москва<small>в пределах МКАД и ТиНАО</small></span></div>
+              <div class="qopt" data-v="0.95"><span class="rd"></span><span>Подмосковье<small>юг МО, до 20–30 км</small></span></div>
+            </div>
+          </div>
+          <div class="qstep" data-step="6">
             <div class="qresult">
               <label class="q" style="margin-bottom:4px">Ориентировочная стоимость работ:</label>
               <div class="price" id="qPrice">— ₽</div>
               <div id="qMusor" style="color:var(--gold-d);font-weight:700;font-size:.98rem;margin:2px 0 10px"></div>
-              <div class="note">Это примерный расчёт работ без учёта материалов. Финальная уборка и вывоз строительного мусора — в подарок. Оставьте контакт — перезвоним, приедем на бесплатный замер и составим точную смету.</div>
+              <div class="note">Это примерный расчёт работ без учёта материалов. Оставьте контакт — перезвоним, приедем на бесплатный замер и составим точную смету.</div>
             </div>
             <div class="qform">
               <input type="text" id="qName" placeholder="Ваше имя" autocomplete="name">
@@ -477,7 +486,7 @@ html.js .rv.in{opacity:1;transform:none}
           </div>
           <div class="qnav">
             <button type="button" class="qback" id="qBack" style="visibility:hidden" onclick="qStep(-1)">← Назад</button>
-            <span style="color:#7c828a;font-size:.86rem" id="qCount">Шаг 1 из 5</span>
+            <span style="color:#7c828a;font-size:.86rem" id="qCount">Шаг 1 из 6</span>
           </div>
         </form>
       </div>
@@ -493,47 +502,52 @@ html.js .rv.in{opacity:1;transform:none}
     <p class="sec-sub">Цены указаны за работы под ключ за м². Материалы — по вашему выбору, есть опция закупки по оптовым ценам.</p>
     <div class="pkgs">
       <div class="pkg">
+        <h3>Косметический</h3>
+        <div class="from">работы, от</div>
+        <div class="price">6 900 ₽ <span>/ м²</span></div>
+        <ul>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Обновление без перепланировки</li>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Обои, покраска, ламинат</li>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Замена сантехники и приборов</li>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Натяжной потолок</li>        </ul>
+        <button class="btn btn-ghost btn-block" onclick="document.getElementById('quiz').scrollIntoView({behavior:'smooth'})">Рассчитать стоимость</button>
+      </div>
+      <div class="pkg">
         <h3>Черновой</h3>
         <div class="from">работы, от</div>
-        <div class="price">15 000 ₽ <span>/ м²</span></div>
+        <div class="price">8 900 ₽ <span>/ м²</span></div>
         <ul>
           <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Демонтаж старой отделки</li>
           <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Разводка электрики и сантехники (трубы REHAU)</li>
           <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Стяжка, штукатурка по маякам</li>
-          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Подготовка под чистовую отделку</li>
-          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><b>Уборка и вывоз мусора в подарок</b></li>
-        </ul>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Подготовка под чистовую отделку</li>        </ul>
         <button class="btn btn-ghost btn-block" onclick="document.getElementById('quiz').scrollIntoView({behavior:'smooth'})">Рассчитать стоимость</button>
       </div>
       <div class="pkg pop">
-        <h3>Под ключ</h3>
+        <h3>Капитальный</h3>
         <div class="from">работы, от</div>
-        <div class="price">19 500 ₽ <span>/ м²</span></div>
+        <div class="price">10 900 ₽ <span>/ м²</span></div>
         <ul>
           <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Всё из «Чернового»</li>
           <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Чистовая отделка всех комнат</li>
           <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Полы, плитка, санузел под ключ</li>
-          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Монтаж сантехники (трубы REHAU), розеток, дверей</li>
-          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><b>Уборка и вывоз мусора в подарок</b></li>
-        </ul>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Монтаж сантехники (трубы REHAU), розеток, дверей</li>        </ul>
         <button class="btn btn-gold btn-block" onclick="document.getElementById('quiz').scrollIntoView({behavior:'smooth'})">Рассчитать стоимость</button>
       </div>
       <div class="pkg">
-        <h3>Премиум</h3>
+        <h3>Дизайнерский</h3>
         <div class="from">работы, от</div>
-        <div class="price">28 000 ₽ <span>/ м²</span></div>
+        <div class="price">24 900 ₽ <span>/ м²</span></div>
         <ul>
-          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Всё из «Под ключ»</li>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Всё из «Капитального»</li>
           <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Керамогранит, сложная геометрия</li>
           <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Декоративная отделка, подсветка</li>
-          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Дизайнер и авторский надзор</li>
-          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><b>Уборка и вывоз мусора в подарок</b></li>
-        </ul>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Дизайнер и авторский надзор</li>        </ul>
         <button class="btn btn-ghost btn-block" onclick="document.getElementById('quiz').scrollIntoView({behavior:'smooth'})">Рассчитать стоимость</button>
       </div>
     </div>
-    <p class="sec-sub center" style="margin:26px auto 4px;font-size:1rem;color:#f3efe8;font-weight:600">Например: квартира 50 м² под ключ (работы) — ориентировочно <span style="color:var(--gold)">≈ 975 000 ₽</span></p>
-    <p class="sec-sub center" style="margin:0 auto;font-size:.86rem;color:var(--cream-dim)">Финальная уборка и вывоз строительного мусора — в подарок, без доплат. Итоговая цена зависит от площади, состояния квартиры и материалов. Точную смету составляем бесплатно после замера.</p>
+    <p class="sec-sub center" style="margin:26px auto 4px;font-size:1rem;color:#f3efe8;font-weight:600">Например: квартира 50 м² капитальный ремонт (работы) — ориентировочно <span style="color:var(--gold)">≈ 550 000 ₽</span></p>
+    <p class="sec-sub center" style="margin:0 auto;font-size:.86rem;color:var(--cream-dim)">Итоговая цена зависит от площади, состояния квартиры и материалов. Точную смету составляем бесплатно после замера.</p>
   </div>
 </section>
 
@@ -803,7 +817,7 @@ modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.remove('o
 
 document.querySelectorAll('.qa button').forEach(b=>b.addEventListener('click',()=>b.parentElement.classList.toggle('open')));
 
-let step=1; const TOTAL=5; const answers={type:null,area:null,level:null,when:null}; let calcOut=null;
+let step=1; const TOTAL=6; const answers={type:null,area:null,level:null,when:null,geo:null}; let calcOut=null;
 function render(){
   document.querySelectorAll('.qstep').forEach(s=>s.classList.toggle('active',+s.dataset.step===step));
   document.getElementById('qbar').style.width=(step/TOTAL*100)+'%';
@@ -822,14 +836,13 @@ document.querySelectorAll('.qopts').forEach(group=>{
 });
 function qStep(d){step=Math.min(TOTAL,Math.max(1,step+d));render();}
 function calc(){
-  const t=answers.type||1,a=answers.area||50,l=answers.level||19500;
-  let low=Math.ceil(a*l*t/10000)*10000;
+  const t=answers.type||1,a=answers.area||50,l=answers.level||10900,g=answers.geo||1;
+  let low=Math.ceil(a*l*t*g/10000)*10000;
   let high=Math.ceil(low*1.25/10000)*10000;
   const f=n=>n.toLocaleString('ru-RU');
   document.getElementById('qPrice').textContent=f(low)+' – '+f(high)+' ₽';
-  // уборка и вывоз мусора — В ПОДАРОК; сумму считаем, чтобы показать ценность подарка
-  const musor=Math.ceil(a*(t>1.05?800:400)/1000)*1000;
-  document.getElementById('qMusor').textContent='Уборка и вывоз мусора — в подарок (ценность ≈ '+f(musor)+' ₽)';
+  document.getElementById('qMusor').textContent='';
+  const musor=0;
   calcOut={low:low,high:high,musor:musor};
   trackGoal('quiz_price_shown');
 }
