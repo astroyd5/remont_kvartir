@@ -343,6 +343,25 @@ function trackGoal(name){
 }
 /* Общая цель 'zayavka' — одна на все точки заявки (см. index.html). */
 function trackConversion(name){ trackGoal(name); trackGoal('zayavka'); }
+/* Статистика заявок — см. index.html: номер не отправляем, только маска и хэш. */
+const STATS_ENDPOINT='https://eun8n.elivance.eu/webhook/astroy-site-stats';
+async function sendStats(src,name,phone){
+  try{
+    const d=String(phone||'').replace(/\D/g,'');
+    const ph=(d.length===11&&d[0]==='8')?'7'+d.slice(1):d;
+    let hash=null;
+    if(ph&&window.crypto&&crypto.subtle){
+      const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(ph));
+      hash=[...new Uint8Array(buf)].map(x=>x.toString(16).padStart(2,'0')).join('').slice(0,8);
+    }
+    fetch(STATS_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      name_first:String(name||'').trim().split(/\s+/)[0]||null,
+      phone_mask:ph?'…'+ph.slice(-4):null,
+      phone_hash:hash,
+      source:src, quiz:{}, calc:{}, utm:UTM, page:location.href
+    })}).catch(()=>{});
+  }catch(e){}
+}
 
 document.querySelectorAll('.qa button').forEach(b=>b.addEventListener('click',()=>b.parentElement.classList.toggle('open')));
 
@@ -356,6 +375,7 @@ function submitLead(){
   if(consent&&!consent.checked){alert('Пожалуйста, подтвердите согласие на обработку персональных данных');return;}
   const payload={name,phone,addr,when,source:'zamer',utm:UTM,page:location.href,ts:new Date().toISOString()};
   if(LEAD_ENDPOINT){fetch(LEAD_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).catch(()=>{});}
+  sendStats('zamer',name,phone);
   console.log('LEAD →',payload);
   trackConversion('lead');
   document.getElementById('formBody').innerHTML='<div class="thanks"><div class="ok"><svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="#4bbf87" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h2>Заявка принята!</h2><p>Перезвоним в течение 15 минут в рабочее время, согласуем удобное время для бесплатного замера.</p></div>';
