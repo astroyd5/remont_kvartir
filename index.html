@@ -824,6 +824,10 @@ function trackGoal(name){
   try{if(window.ym)ym(110775830,'reachGoal',name);}catch(e){}
   try{(window._tmr=window._tmr||[]).push({id:'3785231',type:'reachGoal',goal:name});}catch(e){}
 }
+/* Конверсия = заявка любым путём: форма ИЛИ переход в бота (квиз ведёт туда,
+   формы на последнем шаге больше нет). Своя цель остаётся для раздельной
+   аналитики, 'zayavka' — общая, её и ставим ключевой в Директе и VK. */
+function trackConversion(name){ trackGoal(name); trackGoal('zayavka'); }
 
 const modal=document.getElementById('modal');
 document.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>modal.classList.add('on')));
@@ -875,7 +879,7 @@ function botPayload(){
   return 'q_'+t+'_'+a+'_'+l+'_'+w+'_'+g+'_'+low+'_'+high;
 }
 function openBot(){
-  if(window.trackGoal)trackGoal('bot_open');
+  if(window.trackConversion)trackConversion('bot_open');
   var base='https://t.me/astroy_raschet_bot?start='+botPayload();
   var done=false;
   function go(cid){ if(done)return; done=true; window.open(base+(cid?('_'+cid):''),'_blank'); }
@@ -891,7 +895,7 @@ function submitLead(src){
   const payload={name,phone,source:src,quiz:answers,calc:calcOut,utm:UTM,page:location.href,ts:new Date().toISOString()};
   if(LEAD_ENDPOINT){fetch(LEAD_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).catch(()=>{});}
   console.log('LEAD →',payload);
-  trackGoal('lead');
+  trackConversion('lead');
   if(src==='modal'){
     document.getElementById('modalForm').innerHTML='<div class="thanks"><div class="ok"><svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="#4bbf87" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Спасибо, заявка принята!</h3><p class="ms">Перезвоним в течение 15 минут в рабочее время.</p></div>';
   }else{
