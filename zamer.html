@@ -337,7 +337,10 @@ html.js .rv.in{opacity:1;transform:none}
 <script>
 const LEAD_ENDPOINT='https://eun8n.elivance.eu/webhook/astroy-lead';
 const UTM=(()=>{const p=new URLSearchParams(location.search);const o={};['utm_source','utm_medium','utm_campaign','utm_content','utm_term','yclid','gclid'].forEach(k=>{const v=p.get(k);if(v)o[k]=v;});return o;})();
-function trackGoal(name){try{if(window.ym)ym(110775830,'reachGoal',name);}catch(e){}}
+function trackGoal(name){
+  try{if(window.ym)ym(110775830,'reachGoal',name);}catch(e){}
+  try{(window._tmr=window._tmr||[]).push({id:'3785231',type:'reachGoal',goal:name});}catch(e){}
+}
 
 document.querySelectorAll('.qa button').forEach(b=>b.addEventListener('click',()=>b.parentElement.classList.toggle('open')));
 
