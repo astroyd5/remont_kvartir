@@ -393,8 +393,8 @@ html.js .rv.in{opacity:1;transform:none}
     <div class="hero-media">
       <img src="assets/room-bedroom.webp" alt="Квартира после ремонта под ключ — декоративная отделка стен" loading="eager">
       <div class="hero-badge">
-        <div class="big">≈ 9 300 ₽/м²</div>
-        <small>ориентир по работам «под ключ», точная смета — после замера</small>
+        <div class="big">от 5 900 ₽/м²</div>
+        <small>цены на работы — точная смета после бесплатного замера</small>
       </div>
     </div>
   </div>
@@ -489,11 +489,18 @@ html.js .rv.in{opacity:1;transform:none}
               <label class="q" style="margin-bottom:4px">Ориентировочная стоимость работ:</label>
               <div class="price" id="qPrice">— ₽</div>
               <div id="qMusor" style="color:var(--gold-d);font-weight:700;font-size:.98rem;margin:2px 0 10px"></div>
-              <div class="note">Это примерный расчёт работ без учёта материалов. Подробный расчёт с разбивкой по этапам и образцом сметы уже ждёт вас в Telegram — по вашей квартире дальше отвечает лично бригадир Александр.</div>
+              <div class="note">Точная смета по вашей квартире с разбивкой по этапам — бесплатно. Куда прислать?</div>
             </div>
-            <div class="qtg" style="margin-top:16px">
-              <button type="button" class="btn btn-gold btn-block" onclick="openBot()">Получить ваш расчёт в Telegram →</button>
-              <div style="color:#7c828a;font-size:.8rem;margin-top:9px;text-align:center">Откроется наш Telegram-бот: пришлём подробный файл, ответит лично Александр. Бесплатно.<br>Продолжая в боте, вы принимаете <a href="policy.html#policy" target="_blank" rel="noopener" style="color:var(--gold-d);text-decoration:underline">политику конфиденциальности</a>.</div>
+            <div class="qform" style="margin-top:16px">
+              <input type="text" id="qName" placeholder="Ваше имя" autocomplete="name">
+              <input type="tel" id="qPhone" placeholder="Телефон" autocomplete="tel">
+              <button type="button" class="btn btn-gold btn-block" onclick="submitLead('quiz')">Получить точную смету →</button>
+              <label class="consent"><input type="checkbox" id="qConsent"><span>Я даю <a href="policy.html#consent" target="_blank" rel="noopener" style="color:var(--gold-d);text-decoration:underline">согласие на обработку персональных данных</a> и принимаю <a href="policy.html#policy" target="_blank" rel="noopener" style="color:var(--gold-d);text-decoration:underline">Политику конфиденциальности</a>.</span></label>
+              <div style="text-align:center;margin:16px 0 10px;color:#7c828a;font-size:.82rem">или напишите нам сами</div>
+              <div style="display:flex;gap:10px">
+                <a href="https://wa.me/79912959125" target="_blank" rel="noopener" class="btn btn-block" style="background:transparent;border:1.5px solid var(--line-l);color:#1a1e23" onclick="if(window.trackConversion)trackConversion('whatsapp_open')">WhatsApp</a>
+                <button type="button" class="btn btn-block" style="background:transparent;border:1.5px solid var(--line-l);color:#1a1e23" onclick="openBot()">Telegram</button>
+              </div>
             </div>
           </div>
           <div class="qnav">
