@@ -497,8 +497,8 @@ html.js .rv.in{opacity:1;transform:none}
               <div class="note">Точная смета по вашей квартире с разбивкой по этапам — бесплатно. Куда прислать?</div>
             </div>
             <div class="qform" style="margin-top:16px">
-              <input type="text" id="qName" placeholder="Ваше имя" autocomplete="name">
-              <input type="tel" id="qPhone" placeholder="Телефон" autocomplete="tel">
+              <input type="text" id="qName" class="ym-record-keys" placeholder="Ваше имя" autocomplete="name">
+              <input type="tel" id="qPhone" class="ym-record-keys" placeholder="Телефон" autocomplete="tel">
               <button type="button" class="btn btn-gold btn-block" onclick="submitLead('quiz')">Получить точную смету →</button>
               <label class="consent"><input type="checkbox" id="qConsent"><span>Я даю <a href="policy.html#consent" target="_blank" rel="noopener" style="color:var(--gold-d);text-decoration:underline">согласие на обработку персональных данных</a> и принимаю <a href="policy.html#policy" target="_blank" rel="noopener" style="color:var(--gold-d);text-decoration:underline">Политику конфиденциальности</a>.</span></label>
               <div style="text-align:center;margin:16px 0 10px;color:#7c828a;font-size:.82rem">или напишите нам сами</div>
@@ -821,8 +821,8 @@ html.js .rv.in{opacity:1;transform:none}
     <div id="modalForm">
       <h3>Заявка на бесплатный замер</h3>
       <p class="ms">Оставьте контакт — перезвоним в течение 15 минут в рабочее время и ответим на все вопросы.</p>
-      <input type="text" id="mName" placeholder="Ваше имя" autocomplete="name">
-      <input type="tel" id="mPhone" placeholder="Телефон" autocomplete="tel">
+      <input type="text" id="mName" class="ym-record-keys" placeholder="Ваше имя" autocomplete="name">
+      <input type="tel" id="mPhone" class="ym-record-keys" placeholder="Телефон" autocomplete="tel">
       <button class="btn btn-gold btn-block" onclick="submitLead('modal')">Вызвать мастера</button>
       <label class="consent"><input type="checkbox" id="mConsent"><span>Я даю <a href="policy.html#consent" target="_blank" rel="noopener" style="color:var(--gold-d);text-decoration:underline">согласие на обработку персональных данных</a> и принимаю <a href="policy.html#policy" target="_blank" rel="noopener" style="color:var(--gold-d);text-decoration:underline">Политику конфиденциальности</a>.</span></label>
     </div>
@@ -925,6 +925,46 @@ function openBot(){
   try{ ym(110775830,'getClientID',function(cid){ go(cid); }); }catch(e){}
   setTimeout(function(){ go(''); }, 600);
 }
+/* Надёжная отправка заявки (03.10.2026). Раньше fetch шёл вслепую: «Заявка принята» показывалась
+   сразу, ошибка глоталась — 02.10 заявка потерялась. Теперь ждём подтверждения от сервера:
+   ответ {ok:true, lead_id:<наш номер>} приходит только после того, как ушли письмо и Telegram.
+   Пустой ответ, ошибка или 15 с тишины = сбой → показываем WhatsApp и телефон, форму не трогаем. */
+function newLeadId(){
+  try{ if(window.crypto&&crypto.randomUUID) return crypto.randomUUID(); }catch(e){}
+  return 'l'+Date.now().toString(36)+Math.random().toString(36).slice(2,10);
+}
+async function deliverLead(payload){
+  const ctl=('AbortController' in window)?new AbortController():null;
+  const timer=setTimeout(()=>{try{ctl&&ctl.abort();}catch(e){}},15000);
+  try{
+    const r=await fetch(LEAD_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload),keepalive:true,signal:ctl?ctl.signal:undefined});
+    const j=await r.json().catch(()=>null);
+    return !!(r.ok&&j&&j.ok===true&&j.lead_id===payload.lead_id);
+  }catch(e){ return false; }
+  finally{ clearTimeout(timer); }
+}
+function leadFailBox(){
+  return '<div class="lead-fail" role="alert" style="margin-top:12px;padding:14px 16px;border:1.5px solid #e0a64b;border-radius:12px;background:#fff8ec;color:#1a1e23;text-align:left">'
+   +'<b>Не получилось отправить — сбой связи.</b><br>Напишите в WhatsApp или позвоните, ответим сразу.'
+   +'<div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">'
+   +'<a href="https://wa.me/79912959125" target="_blank" rel="noopener" class="btn" style="flex:1;min-width:130px;background:#25d366;color:#fff;justify-content:center">WhatsApp</a>'
+   +'<a href="tel:+79169774807" class="btn" style="flex:1;min-width:130px;background:#1a1e23;color:#fff;justify-content:center">Позвонить</a>'
+   +'</div><div style="font-size:.82rem;color:#7c828a;margin-top:8px">Или нажмите кнопку отправки ещё раз.</div></div>';
+}
+/* Общая обвязка: блокирует кнопку, ждёт подтверждения; успех — onOk, сбой — плашка под кнопкой. */
+async function sendLeadUI(btn,payload,onOk){
+  if(!btn||btn.dataset.sending==='1')return;
+  const old=btn.parentElement.querySelector('.lead-fail'); if(old)old.remove();
+  const label=btn.innerHTML; btn.dataset.sending='1'; btn.disabled=true; btn.innerHTML='Отправляем…';
+  if(!btn.dataset.leadId)btn.dataset.leadId=newLeadId();
+  payload.lead_id=btn.dataset.leadId;
+  if(/^\s*тест(\s|$)/i.test(payload.name||''))payload.test=1;
+  const ok=await deliverLead(payload);
+  btn.disabled=false; btn.dataset.sending=''; btn.innerHTML=label;
+  if(ok){ if(!payload.test)trackConversion('lead'); onOk(); }
+  else{ if(!payload.test)trackGoal('lead_failed'); btn.insertAdjacentHTML('afterend',leadFailBox()); }
+}
 function submitLead(src){
   let name,phone,consent;
   if(src==='quiz'){name=document.getElementById('qName').value;phone=document.getElementById('qPhone').value;consent=document.getElementById('qConsent');}
@@ -932,15 +972,15 @@ function submitLead(src){
   if(!phone||phone.replace(/\D/g,'').length<6){alert('Пожалуйста, укажите телефон для связи');return;}
   if(consent&&!consent.checked){alert('Пожалуйста, подтвердите согласие на обработку персональных данных');return;}
   const payload={name,phone,source:src,quiz:answers,calc:calcOut,utm:UTM,page:location.href,ts:new Date().toISOString()};
-  if(LEAD_ENDPOINT){fetch(LEAD_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).catch(()=>{});}
-  sendStats(src,name,phone);
-  console.log('LEAD →',payload);
-  trackConversion('lead');
-  if(src==='modal'){
-    document.getElementById('modalForm').innerHTML='<div class="thanks"><div class="ok"><svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="#4bbf87" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Спасибо, заявка принята!</h3><p class="ms">Перезвоним в течение 15 минут в рабочее время.</p></div>';
-  }else{
-    document.querySelector('#quiz .qform').innerHTML='<div class="thanks"><div class="ok"><svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="#4bbf87" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3 style="font-family:Playfair Display,serif">Заявка принята!</h3><p class="note">Пришлём детальную смету и перезвоним для записи на бесплатный замер.</p></div>';
-  }
+  const btn=(src==='modal')?document.querySelector('#modalForm button.btn-gold'):document.querySelector('#quiz .qform button.btn-gold');
+  sendLeadUI(btn,payload,function(){
+    sendStats(src,name,phone);
+    if(src==='modal'){
+      document.getElementById('modalForm').innerHTML='<div class="thanks"><div class="ok"><svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="#4bbf87" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Спасибо, заявка принята!</h3><p class="ms">Перезвоним в течение 15 минут в рабочее время.</p></div>';
+    }else{
+      document.querySelector('#quiz .qform').innerHTML='<div class="thanks"><div class="ok"><svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="#4bbf87" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3 style="font-family:Playfair Display,serif">Заявка принята!</h3><p class="note">Пришлём детальную смету и перезвоним для записи на бесплатный замер.</p></div>';
+    }
+  });
 }
 
 /* карусель работ */
