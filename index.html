@@ -927,22 +927,30 @@ function openBot(){
 }
 /* Надёжная отправка заявки (03.10.2026). Раньше fetch шёл вслепую: «Заявка принята» показывалась
    сразу, ошибка глоталась — 02.10 заявка потерялась. Теперь ждём подтверждения от сервера:
-   ответ {ok:true, lead_id:<наш номер>} приходит только после того, как ушли письмо и Telegram.
+   ответ {ok:true, lead_id:<наш номер>}: от РФ — заявка сохранена, от Германии — ушли письмо и Telegram.
    Пустой ответ, ошибка или 15 с тишины = сбой → показываем WhatsApp и телефон, форму не трогаем. */
 function newLeadId(){
   try{ if(window.crypto&&crypto.randomUUID) return crypto.randomUUID(); }catch(e){}
   return 'l'+Date.now().toString(36)+Math.random().toString(36).slice(2,10);
 }
-async function deliverLead(payload){
+/* Сначала сервер в РФ (полная копия заявки хранится там, 152-ФЗ; в группу и на почту её за минуту
+   пересылает немецкий сервер), при сбое — запасной путь напрямую в n8n в Германии. Номер заявки один,
+   так что дубля не будет: n8n спросит у РФ, не доставляется ли она уже. */
+const LEAD_ENDPOINT_RU='https://leads-ru.elivance.eu/api/lead';
+async function tryLead(url,payload,ms){
   const ctl=('AbortController' in window)?new AbortController():null;
-  const timer=setTimeout(()=>{try{ctl&&ctl.abort();}catch(e){}},15000);
+  const timer=setTimeout(()=>{try{ctl&&ctl.abort();}catch(e){}},ms);
   try{
-    const r=await fetch(LEAD_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},
+    const r=await fetch(url+'?lid='+encodeURIComponent(payload.lead_id),{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify(payload),keepalive:true,signal:ctl?ctl.signal:undefined});
     const j=await r.json().catch(()=>null);
     return !!(r.ok&&j&&j.ok===true&&j.lead_id===payload.lead_id);
   }catch(e){ return false; }
   finally{ clearTimeout(timer); }
+}
+async function deliverLead(payload){
+  if(await tryLead(LEAD_ENDPOINT_RU,payload,8000))return true;
+  return await tryLead(LEAD_ENDPOINT,payload,15000);
 }
 function leadFailBox(){
   return '<div class="lead-fail" role="alert" style="margin-top:12px;padding:14px 16px;border:1.5px solid #e0a64b;border-radius:12px;background:#fff8ec;color:#1a1e23;text-align:left">'
