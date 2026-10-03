@@ -104,6 +104,10 @@ header{position:sticky;top:0;z-index:60;background:rgba(16,19,23,.85);backdrop-f
 .fcard input:focus,.fcard select:focus{outline:none;border-color:var(--gold);background:#fff}
 .consent{display:flex;gap:9px;align-items:flex-start;font-size:.78rem;color:#7c828a;text-align:left;margin-top:4px}
 .consent input{width:auto;margin:3px 0 0}
+/* Удобный ввод на телефоне (03.10.2026): пока открыта клавиатура, нижняя панель не закрывает поле; галочка крупнее */
+body.typing .mbar{display:none!important}
+.consent input{width:22px;height:22px;flex:0 0 22px;margin:0;accent-color:#b8863b}
+
 .fcard .fnote{margin-top:14px;font-size:.82rem;color:#7c828a;display:flex;align-items:center;gap:8px;justify-content:center}
 .fcard .fnote svg{flex:none;color:var(--ok)}
 @media(max-width:900px){.hero-grid{grid-template-columns:1fr;gap:30px;padding:40px 0 48px}.fcard .tag{left:22px}}
@@ -434,6 +438,45 @@ function submitLead(){
     document.getElementById('formBody').innerHTML='<div class="thanks"><div class="ok"><svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="#4bbf87" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h2>Заявка принята!</h2><p>Перезвоним в течение 15 минут в рабочее время, согласуем удобное время для бесплатного замера.</p></div>';
   });
 }
+
+/* Удобный ввод на телефоне (03.10.2026).
+   1) Пока поле в фокусе, прячем нижнюю панель: на телефоне она поднимается вместе с клавиатурой и закрывала номер.
+   2) Телефон: маска +7 (___) ___-__-__, цифровая клавиатура; «8…» и «9…» превращаем в «+7 (…».
+   3) Enter в поле имени переводит на телефон. */
+(function(){
+  const FIELDS='input:not([type=checkbox]):not([type=radio]),textarea,select';
+  document.addEventListener('focusin',function(e){
+    if(!e.target.matches||!e.target.matches(FIELDS))return;
+    document.body.classList.add('typing');
+    const el=e.target; setTimeout(function(){try{el.scrollIntoView({block:'center',behavior:'smooth'});}catch(_){}} ,350);
+  });
+  document.addEventListener('focusout',function(){
+    setTimeout(function(){const a=document.activeElement; if(!a||!a.matches||!a.matches(FIELDS))document.body.classList.remove('typing');},150);
+  });
+  function fmt(v){
+    // первая 7 или 8 — код страны (+7 / 8), дальше 10 цифр номера; 916…, 8 916…, +7 812… дают верный номер
+    let r=String(v).replace(/\D/g,''); if(r[0]==='7'||r[0]==='8')r=r.slice(1); r=r.slice(0,10);
+    let s='+7 '; if(r.length)s+='('+r.slice(0,3); if(r.length>=3)s+=')'; if(r.length>3)s+=' '+r.slice(3,6);
+    if(r.length>6)s+='-'+r.slice(6,8); if(r.length>8)s+='-'+r.slice(8,10); return s;
+  }
+  document.querySelectorAll('input[type=tel]').forEach(function(el){
+    el.setAttribute('inputmode','tel'); el.setAttribute('enterkeyhint','done'); el.setAttribute('maxlength','18');
+    el.placeholder='+7 (___) ___-__-__';
+    el.addEventListener('input',function(e){
+      if(e.inputType&&e.inputType.indexOf('delete')===0)return; // стирать не мешаем
+      if(/^\+?7?\s?$/.test(el.value))return;
+      el.value=fmt(el.value);
+    });
+    el.addEventListener('blur',function(){ if(/^\+?7?\s*$/.test(el.value))el.value=''; });
+  });
+  document.querySelectorAll('input[autocomplete=name]').forEach(function(el){
+    el.setAttribute('enterkeyhint','next');
+    el.addEventListener('keydown',function(e){
+      if(e.key!=='Enter')return; e.preventDefault();
+      const box=el.closest('#modalForm,#quiz,#formBody')||document; const t=box.querySelector('input[type=tel]'); if(t)t.focus();
+    });
+  });
+})();
 
 /* reveal — render-safe */
 (function(){
