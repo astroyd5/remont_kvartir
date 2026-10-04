@@ -1014,7 +1014,11 @@ function submitLead(src){
   if(!phone||phone.replace(/\D/g,'').length<6){alert('Пожалуйста, укажите телефон для связи');return;}
   if(consent&&!consent.checked){alert('Пожалуйста, подтвердите согласие на обработку персональных данных');return;}
   if(src==='quiz'&&!submitLead._checked){
+    const mb=document.querySelector('#qMailForm button.btn-gold');
+    if(!mb||mb.dataset.checking==='1'||mb.dataset.sending==='1')return;
+    const mlabel=mb.innerHTML; mb.dataset.checking='1'; mb.disabled=true; mb.innerHTML='Проверяем почту…';
     checkMail(email).then(function(r){
+      mb.dataset.checking=''; mb.disabled=false; mb.innerHTML=mlabel;
       const inp=document.getElementById('qEmail');
       if(r.fix){inp.value=r.fix;}
       else if(r.bad){alert('Проверьте почту: на «'+r.bad+'» письма не доходят. Похоже, опечатка в адресе.');inp.focus();return;}
@@ -1023,7 +1027,7 @@ function submitLead(src){
     return;
   }
   const payload={name,phone,email,source:src,quiz:answers,calc:calcOut,utm:UTM,page:location.href,ts:new Date().toISOString()};
-  const btn=(src==='modal')?document.querySelector('#modalForm button.btn-gold'):document.querySelector('#quiz .qform button.btn-gold');
+  const btn=(src==='modal')?document.querySelector('#modalForm button.btn-gold'):document.querySelector('#qMailForm button.btn-gold');
   sendLeadUI(btn,payload,function(){
     sendStats(src,name,phone);
     if(src==='modal'){
