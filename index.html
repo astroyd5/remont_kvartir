@@ -982,6 +982,28 @@ function showMailForm(){
   const l=document.querySelector('#quiz .qnotg'); if(l)l.style.display='none';
   setTimeout(function(){const n=document.getElementById('qName'); if(n)n.focus();},50);
 }
+/* Проверка почты до отправки (04.10.2026): опечатку в домене почтовый сервер принимает молча,
+   и письмо с расчётом теряется. Спрашиваем у DNS (Cloudflare), есть ли у домена почта; наружу уходит только домен.
+   Сеть не ответила - не мешаем отправке. */
+const MAIL_FIX={'gmial.com':'gmail.com','gmai.com':'gmail.com','gamil.com':'gmail.com','gmail.co':'gmail.com','gmail.con':'gmail.com','gmail.ru':'gmail.com','gmal.com':'gmail.com',
+  'yandex.ry':'yandex.ru','yandx.ru':'yandex.ru','yanex.ru':'yandex.ru','yandex.r':'yandex.ru','ya.ry':'ya.ru','mail.ry':'mail.ru','mail.r':'mail.ru','mali.ru':'mail.ru','maill.ru':'mail.ru',
+  'bk.ry':'bk.ru','list.ry':'list.ru','inbox.ry':'inbox.ru','rambler.ry':'rambler.ru','ramber.ru':'rambler.ru','outlook.con':'outlook.com','hotmail.con':'hotmail.com','icloud.con':'icloud.com','iclod.com':'icloud.com'};
+function dohHas(d,t){
+  return Promise.race([
+    fetch('https://cloudflare-dns.com/dns-query?name='+encodeURIComponent(d)+'&type='+t,{headers:{accept:'application/dns-json'}})
+      .then(function(r){return r.json();}).then(function(j){return j.Status===3?false:!!(j.Answer&&j.Answer.length);}),
+    new Promise(function(res){setTimeout(function(){res(null);},2500);})
+  ]).catch(function(){return null;});
+}
+function checkMail(email){
+  const d=email.split('@').pop().toLowerCase();
+  const fix=MAIL_FIX[d];
+  if(fix){return Promise.resolve(confirm('Похоже, опечатка в почте: '+d+'. Вы имели в виду '+fix+'?\n\nОК - исправить, Отмена - оставить как есть')?{fix:email.replace(/@[^@]+$/,'@'+fix)}:{ok:true});}
+  return dohHas(d,'MX').then(function(mx){
+    if(mx!==false)return {ok:true};
+    return dohHas(d,'A').then(function(a){return a===false?{bad:d}:{ok:true};});
+  });
+}
 function submitLead(src){
   let name,phone,consent;
   let email='';
@@ -990,6 +1012,15 @@ function submitLead(src){
   else{name=document.getElementById('mName').value;phone=document.getElementById('mPhone').value;consent=document.getElementById('mConsent');}
   if(!phone||phone.replace(/\D/g,'').length<6){alert('Пожалуйста, укажите телефон для связи');return;}
   if(consent&&!consent.checked){alert('Пожалуйста, подтвердите согласие на обработку персональных данных');return;}
+  if(src==='quiz'&&!submitLead._checked){
+    checkMail(email).then(function(r){
+      const inp=document.getElementById('qEmail');
+      if(r.fix){inp.value=r.fix;}
+      else if(r.bad){alert('Проверьте почту: на «'+r.bad+'» письма не доходят. Похоже, опечатка в адресе.');inp.focus();return;}
+      submitLead._checked=true; try{submitLead(src);}finally{submitLead._checked=false;}
+    });
+    return;
+  }
   const payload={name,phone,email,source:src,quiz:answers,calc:calcOut,utm:UTM,page:location.href,ts:new Date().toISOString()};
   const btn=(src==='modal')?document.querySelector('#modalForm button.btn-gold'):document.querySelector('#quiz .qform button.btn-gold');
   sendLeadUI(btn,payload,function(){
