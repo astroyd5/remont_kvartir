@@ -981,6 +981,7 @@ function showMailForm(){
   const f=document.getElementById('qMailForm'); if(!f)return; f.hidden=false;
   const l=document.querySelector('#quiz .qnotg'); if(l)l.style.display='none';
   setTimeout(function(){const n=document.getElementById('qName'); if(n)n.focus();},50);
+  dohHas('gmail.com','MX'); // прогрев соединения для проверки почты
 }
 /* Проверка почты до отправки (04.10.2026): опечатку в домене почтовый сервер принимает молча,
    и письмо с расчётом теряется. Спрашиваем у DNS (Cloudflare), есть ли у домена почта; наружу уходит только домен.
@@ -992,7 +993,7 @@ function dohHas(d,t){
   return Promise.race([
     fetch('https://cloudflare-dns.com/dns-query?name='+encodeURIComponent(d)+'&type='+t,{headers:{accept:'application/dns-json'}})
       .then(function(r){return r.json();}).then(function(j){return j.Status===3?false:!!(j.Answer&&j.Answer.length);}),
-    new Promise(function(res){setTimeout(function(){res(null);},2500);})
+    new Promise(function(res){setTimeout(function(){res(null);},4000);})
   ]).catch(function(){return null;});
 }
 function checkMail(email){
